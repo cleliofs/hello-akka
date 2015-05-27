@@ -1,5 +1,5 @@
 import Counter.{Get, Incr}
-import akka.actor.{Actor, Props}
+import akka.actor.{SupervisorStrategy, OneForOneStrategy, Actor, Props}
 import akka.event.LoggingReceive
 
 /**
@@ -11,7 +11,7 @@ class Counter extends Actor {
 
   def counter(n: Int): Receive = LoggingReceive {
     case Incr() => context.become(counter(n + 1))
-    case Get() => sender ! n
+    case Get() => if (n == 0) throw new UnsupportedOperationException else sender ! n
   }
 
   def receive: Receive = counter(0)
@@ -29,12 +29,16 @@ class CounterMain extends Actor {
   // creates a Counter actor named "counter"
   val counter = context.actorOf(Props[Counter], "counter")
 
+  // make the child actor to fail once the counter is 0
+  counter ! Get()
+
   counter ! Incr()
   counter ! Incr()
   counter ! Incr()
   counter ! Incr()
   counter ! Incr()
   counter ! Incr()
+
   counter ! Get()
 
   // receives the messages from Counter
@@ -43,6 +47,11 @@ class CounterMain extends Actor {
       println(s"count was $count")
       context.stop(self)
   }
+
+  override val supervisorStrategy = OneForOneStrategy(maxNrOfRetries = 5) {
+    case _: Exception => SupervisorStrategy.Restart
+  }
+
 }
 
 
