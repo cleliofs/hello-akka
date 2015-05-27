@@ -10,8 +10,8 @@ import akka.event.LoggingReceive
 class Counter extends Actor {
 
   def counter(n: Int): Receive = LoggingReceive {
-    case Incr() => context.become(counter(n + 1))
-    case Get() => if (n == 0) throw new UnsupportedOperationException else sender ! n
+    case Incr => context.become(counter(n + 1))
+    case Get => if (n == 0) throw new UnsupportedOperationException else sender ! n
   }
 
   def receive: Receive = counter(0)
@@ -19,9 +19,9 @@ class Counter extends Actor {
 
 object Counter {
 
-  case class Incr()
+  case object Incr
 
-  case class Get()
+  case object Get
 
 }
 
@@ -30,16 +30,16 @@ class CounterMain extends Actor {
   val counter = context.actorOf(Props[Counter], "counter")
 
   // make the child actor to fail once the counter is 0
-  counter ! Get()
+  counter ! Get
 
-  counter ! Incr()
-  counter ! Incr()
-  counter ! Incr()
-  counter ! Incr()
-  counter ! Incr()
-  counter ! Incr()
+  counter ! Incr
+  counter ! Incr
+  counter ! Incr
+  counter ! Incr
+  counter ! Incr
+  counter ! Incr
 
-  counter ! Get()
+  counter ! Get
 
   // receives the messages from Counter
   def receive = LoggingReceive {
