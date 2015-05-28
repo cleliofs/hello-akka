@@ -14,7 +14,7 @@ class Greeter extends Actor {
   }
 }
 
-object HelloAkkaScala extends App {
+object HelloAkkaActorScala extends App {
 
   // Create the 'helloakka' actor system
   val system = ActorSystem("helloakka")

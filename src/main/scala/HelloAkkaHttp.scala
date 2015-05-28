@@ -1,21 +1,22 @@
 import java.io.IOException
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.model.StatusCodes._
+import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding
 import akka.http.scaladsl.marshalling.ToResponseMarshallable
+import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.stream.{ActorFlowMaterializer, FlowMaterializer}
 import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.{ActorFlowMaterializer, FlowMaterializer}
 import com.typesafe.config.{Config, ConfigFactory}
-import akka.http.scaladsl.Http
-import scala.concurrent.{ExecutionContextExecutor, Future, ExecutionContext}
+
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 /**
- * A test using Akka Http.
+ * Akka Http as per: https://github.com/theiterators/akka-http-microservice/blob/master/src/main/scala/AkkaHttpMicroservice.scala
  *
  * Created by clelio on 27/05/15.
  */
