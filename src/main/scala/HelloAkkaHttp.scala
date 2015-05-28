@@ -48,13 +48,20 @@ trait HelloAkkaHttpService {
 
   val routes = {
     DebuggingDirectives.logRequestResult("akka-http-microservice") {
-      pathPrefix("hello") {
+      pathPrefix("say") {
         (get & path(Segment)) { hello =>
           complete {
             sayHello(hello).map[ToResponseMarshallable] {
               case Right(successMsg) => successMsg
               case Left(errorMsg) => BadRequest -> errorMsg
             }
+          }
+        }
+      } ~
+      path("order") {
+        get {
+          parameter('q) { query =>
+            complete(s"Received GET with query string $query\n")
           }
         }
       }
